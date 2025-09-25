@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Restore Mobility — Physiotherapy Clinic</title>
+  <style>
+    :root{
+      --green:#1ea851;
+      --black:#0b0b0b;
+      --muted:#6b7280;
+      --max-width:1100px;
+    }
+    *{box-sizing:border-box}
+    body{font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; margin:0; color:var(--black); background:#f7faf7;}
+
+    /* PRELOADER */
+    #preloader{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:white;z-index:9999;flex-direction:column}
+    .brand{font-weight:700;text-align:center;font-size:28px;line-height:1.05}
+    .line1{color:var(--green);display:block}
+    .line2{color:var(--green);display:block}
+    .dots{height:18px;margin-top:10px}
+    .dot{display:inline-block;width:8px;height:8px;margin:0 4px;border-radius:50%;background:var(--green);opacity:0;transform:translateY(6px);animation:dot 1s infinite}
+    .dot:nth-child(2){animation-delay:.15s}
+    .dot:nth-child(3){animation-delay:.3s}
+    @keyframes dot{0%{opacity:0;transform:translateY(6px)}50%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-6px)}}
+
+    /* NAV */
+    header{position:sticky;top:0;background:white;border-bottom:1px solid #eef2f1;z-index:900}
+    .nav-wrap{max-width:var(--max-width);margin:0 auto;padding:12px 20px;display:flex;align-items:center;justify-content:space-between}
+    .logo{display:flex;align-items:center;gap:12px}
+    .logo img{width:56px;height:56px;object-fit:cover;border-radius:8px}
+    .company-name{line-height:1}
+    .company-name .c1{color:var(--green);font-weight:800}
+    .company-name .c2{color:var(--black);font-weight:600}
+    nav ul{display:flex;gap:18px;list-style:none;margin:0;padding:0}
+    nav a{color:var(--green);text-decoration:none;font-weight:600}
+
+    /* hamburger */
+    .hamburger{display:none;border:2px solid var(--green);padding:8px;border-radius:8px}
+    .hamburger span{display:block;width:22px;height:2px;background:var(--green);margin:4px 0}
+
+    @media(max-width:900px){
+  nav ul { display:none; position:absolute; top:60px; right:0; background:#fff; flex-direction:column; width:200px; padding:20px; box-shadow:0 2px 5px rgba(0,0,0,0.2);}
+  nav ul.active { display:flex; }
+  .hamburger { display:flex; flex-direction:column; cursor:pointer; }
+  .hamburger span { display:block; width:25px; height:3px; background:var(--green); margin:4px 0; transition:0.3s; }
+}
+
+
+    /* HERO / SLIDER */
+    .hero{max-width:var(--max-width);margin:28px auto;padding:0 20px}
+    .slider{position:relative;overflow:hidden;border-radius:14px;box-shadow:0 8px 30px rgba(13,23,18,0.06)}
+    .slides{display:flex;transition:transform .6s ease;will-change:transform}
+    .slide{min-width:100%;height:360px;display:flex;align-items:center;padding:28px;background-size:cover;background-position:center}
+    .slide .overlay{background:linear-gradient(90deg, rgba(0,0,0,0.28), rgba(0,0,0,0.06));color:white;padding:20px;border-radius:12px}
+    .slider-controls{position:absolute;left:12px;right:12px;bottom:12px;display:flex;justify-content:space-between;align-items:center}
+    .dots-nav{display:flex;gap:8px}
+    .dot-btn{width:10px;height:10px;border-radius:50%;background:#ffffff88;cursor:pointer}
+    .dot-btn.active{background:var(--green)}
+
+    section{max-width:var(--max-width);margin:36px auto;padding:0 20px}
+
+    /* New About creative */
+    .about{display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center}
+    .about .text h3{font-size:28px;margin-bottom:12px;color:var(--green)}
+    .about .text p{color:var(--muted);line-height:1.6}
+    .about .image{position:relative}
+    .about .image img{width:100%;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,0.1)}
+    .about .image::after{content:"";position:absolute;top:20px;left:20px;right:-20px;bottom:-20px;border:3px solid var(--green);border-radius:16px;z-index:-1}
+
+    /* New Services creative */
+    .services h3{text-align:center;font-size:28px;margin-bottom:24px;color:var(--green)}
+    .services .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px}
+    .service-card{background:white;border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,0.06);overflow:hidden;transition:transform .3s, box-shadow .3s}
+    .service-card:hover{transform:translateY(-8px);box-shadow:0 16px 40px rgba(0,0,0,0.08)}
+    .service-card img{width:100%;height:160px;object-fit:cover}
+    .service-card .content{padding:16px}
+    .service-card h4{margin:0 0 8px;color:var(--black)}
+    .service-card p{margin:0;color:var(--muted);font-size:14px;line-height:1.4}
+
+    /* Why Choose Us grid */
+    .why{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+    .why .item{position:relative;padding:20px;border-radius:12px;overflow:hidden;background:linear-gradient(180deg,#fff,#fbfffb);border:1px solid #eef4ec;transition:transform .25s ease,box-shadow .25s ease}
+    .why .item:hover{transform:translateY(-8px);box-shadow:0 18px 40px rgba(20,60,30,0.08)}
+    .why .num{position:absolute;right:14px;top:14px;font-weight:700;color:var(--green);font-size:20px}
+
+   /* Contact Section */
+  #contact { padding:80px 20px; background:#f0f4f8; }
+  #contact h2 { text-align:center; color:#0b63ff; margin-bottom:40px; }
+  .contact-cards-container { max-width:1000px; margin:0 auto; display:flex; flex-wrap:wrap; gap:30px; justify-content:center; }
+  .contact-card { flex:1 1 300px; background:#fff; padding:30px; border-radius:15px; box-shadow:0 8px 20px rgba(0,0,0,0.1); text-align:center; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+  .contact-card:hover { transform: translateY(-8px); box-shadow:0 12px 25px rgba(0,0,0,0.2); }
+  .contact-card h3 { color:#007BFF; margin-bottom:15px; font-size:1.4em; }
+  .contact-card a { display:inline-block; margin-top:15px; padding:10px 20px; background:#007BFF; color:#fff; border-radius:50px; text-decoration:none; transition: all 0.3s ease; }
+  .contact-card a:hover { background:#0056b3; transform: scale(1.05); }
+
+  @media(max-width:768px){
+    .contact-cards-container { flex-direction:column; align-items:center; }
+    .contact-card { width: 90%; }
+  }
+    /* Floating enquire */
+    .enquire-btn{position:fixed;right:18px;bottom:22px;background:var(--green);color:white;border:none;padding:14px 18px;border-radius:999px;box-shadow:0 10px 30px rgba(30,168,81,0.18);cursor:pointer;font-weight:700;z-index:1000}
+
+    /* Modal */
+    .modal-backdrop{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(2,6,2,0.45);z-index:1100}
+    .modal{background:white;border-radius:12px;max-width:520px;width:94%;padding:0;overflow:hidden}
+    .modal-header{display:flex;align-items:center;gap:12px;padding:18px;border-bottom:1px solid #f1f5f1}
+    .modal-header img{width:56px;height:56px;border-radius:8px}
+    .modal-body{padding:18px}
+    .field{display:flex;flex-direction:column;margin-bottom:12px}
+    .field label{font-size:13px;margin-bottom:6px}
+    .field input,.field select{padding:10px;border-radius:8px;border:1px solid #e6efe6}
+    .modal-footer{display:flex;gap:8px;padding:12px;border-top:1px solid #f1f5f1;justify-content:flex-end}
+    .btn{padding:10px 14px;border-radius:10px;border:none;cursor:pointer;font-weight:700}
+    .btn.secondary{background:#f3faf4}
+    .btn.primary{background:var(--green);color:white}
+
+    @media (max-width:900px){
+      .about{grid-template-columns:1fr}
+      .contact .row{grid-template-columns:1fr}
+    }
+    @media (max-width:700px){
+      nav ul{display:none}
+      .hamburger{display:block}
+      .slide{height:260px}
+      .logo img{width:44px;height:44px}
+    }
+  </style>
+</head>
+<body>
+  <!-- PRELOADER -->
+  <div id="preloader">
+    <div class="brand">
+      <span class="line1">Restore</span>
+      <span class="line2">Mobility</span>
+    </div>
+    <div class="dots">
+      <span class="dot"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+    </div>
+  </div>
+
+  <!-- NAV -->
+  <!-- NAV -->
+<header>
+  <div class="nav-wrap">
+    <div class="logo">
+      <img src="logo.jpg" alt="logo">
+      <div class="company-name">
+        <div class="c1">Restore Mobility</div>
+        <div class="c2">Physiotherapy Clinic</div>
+      </div>
+    </div>
+
+    <nav id="mainNav">
+      <ul>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#why">Why Choose Us</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><a href="#testimonials">Testimonials</a></li>
+      </ul>
+    </nav>
+
+    <div class="hamburger" id="hamburgerBtn" aria-label="menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </div>
+</header>
+
+ <!-- HERO -->
+<section class="hero" id="home">
+  <div class="slider">
+    <div class="slides" id="slides">
+      <div class="slide" style="background-image:url('https://picsum.photos/1200/600?image=1050')">
+        <div class="overlay">
+          <h2>Personalized Home Physiotherapy</h2>
+          <p>Experienced therapists, tailored plans to get you moving again.</p>
+        </div>
+      </div>
+      <div class="slide" style="background-image:url('https://picsum.photos/1200/600?image=1039')">
+        <div class="overlay">
+          <h2>Rehabilitation & Pain Management</h2>
+          <p>Recover faster with evidence-based care and hands-on therapy.</p>
+        </div>
+      </div>
+      <div class="slide" style="background-image:url('https://picsum.photos/1200/600?image=1043')">
+        <div class="overlay">
+          <h2>Sports Injury Recovery</h2>
+          <p>Get back to your best performance safely and confidently.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+  <!-- ABOUT -->
+  <section id="about" class="about">
+    <div class="text">
+      <h3>About Us</h3>
+      <p>Restore Mobility Physiotherapy Clinic in Kochi (Ernakulam – Cochin), Kerala, offers advanced physiotherapy treatments to help patients recover naturally from pain, injuries, and mobility challenges — without the use of medicines or surgery.
+
+<p>Our team of expert physiotherapists provides personalized care for conditions such as back pain, arthritis, sports injuries, neurological disorders, post-surgical recovery, women’s health, and stroke rehabilitation. With a focus on modern techniques and compassionate treatment, we help patients restore strength, improve mobility, and regain independence in daily life.</p>
+
+<p>At Restore Mobility, we believe in fast recovery, cost-effective treatment, and holistic care. Whether at our clinic or through convenient home visits, we are committed to helping you live pain-free and healthier every day.</p>.</p>
+    </div>
+    <div class="image">
+      <img src="https://picsum.photos/500/400?image=1027" alt="Physiotherapy session">
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="services" class="services">
+    <h3>Our Services</h3>
+    <div class="cards">
+      <div class="service-card">
+        <img src="https://picsum.photos/400/200?image=1062" alt="Home Physiotherapy">
+        <div class="content">
+          <h4>Home Physiotherapy</h4>
+          <p>Personalized one-on-one sessions in the comfort of your home.</p>
+        </div>
+      </div>
+      <div class="service-card">
+        <img src="https://picsum.photos/400/200?image=1041" alt="Post-Operative Rehab">
+        <div class="content">
+          <h4>Post-Operative Rehab</h4>
+          <p>Structured rehabilitation to regain strength and independence.</p>
+        </div>
+      </div>
+      <div class="service-card">
+        <img src="https://picsum.photos/400/200?image=1031" alt="Pain Management">
+        <div class="content">
+          <h4>Pain Management</h4>
+          <p>Evidence-based therapies to relieve pain and restore function.</p>
+        </div>
+      </div>
+      <div class="service-card">
+        <img src="https://picsum.photos/400/200?image=1031" alt="Pain Management">
+        <div class="content">
+          <h4>Pain Management</h4>
+          <p>Evidence-based therapies to relieve pain and restore function.</p>
+        </div>
+      </div>
+      <div class="service-card">
+        <img src="https://picsum.photos/400/200?image=1031" alt="Pain Management">
+        <div class="content">
+          <h4>Pain Management</h4>
+          <p>Evidence-based therapies to relieve pain and restore function.</p>
+        </div>
+      </div>
+      <div class="service-card">
+        <img src="https://picsum.photos/400/200?image=1031" alt="Pain Management">
+        <div class="content">
+          <h4>Pain Management</h4>
+          <p>Evidence-based therapies to relieve pain and restore function.</p>
+        </div>
+      </div>
+      
+      <div class="service-card">
+        <img src="https://picsum.photos/400/200?image=1055" alt="Sports Rehab">
+        <div class="content">
+          <h4>Sports Rehab</h4>
+          <p>Specialized care for athletes to recover and return to peak performance.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY -->
+  <!-- WHY CHOOSE US -->
+<section id="why">
+  <h2 style="text-align:center;font-size:28px;margin-bottom:28px;color:var(--green)">
+    Why Choose Us
+  </h2>
+  <div class="why">
+    <div class="item">
+      <div class="num">01</div>
+      <h4>Expert Physiotherapists</h4>
+      <p>Certified professionals with years of hands-on experience in rehabilitation and mobility care.</p>
+    </div>
+    <div class="item">
+      <div class="num">02</div>
+      <h4>Personalized Care</h4>
+      <p>Every treatment plan is tailored to your unique needs for faster recovery and long-term results.</p>
+    </div>
+    <div class="item">
+      <div class="num">03</div>
+      <h4>Convenient Home Visits</h4>
+      <p>Receive physiotherapy in the comfort of your home at your preferred time.</p>
+    </div>
+    <div class="item">
+      <div class="num">04</div>
+      <h4>Affordable Packages</h4>
+      <p>High-quality care that fits your budget, with transparent pricing and flexible plans.</p>
+    </div>
+  </div>
+</section>
+
+
+  <!-- CONTACT -->
+  <!-- Contact Section -->
+<section id="contact">
+  <h2>Contact Us</h2>
+  <div class="contact-cards-container">
+    <div class="contact-card">
+      <h3>Corporate Office</h3>
+      <p>123 Main Street,<br>City Name, PIN 123456</p>
+      <p><strong>Timing:</strong> Mon-Fri 9:00 AM - 6:00 PM</p>
+      <a href="https://www.google.com/maps?q=123+Main+Street+City+Name" target="_blank">View on Map</a>
+    </div>
+    <div class="contact-card">
+      <h3>Workspace</h3>
+      <p>456 Business Park,<br>City Name, PIN 654321</p>
+      <p><strong>Timing:</strong> Mon-Sat 10:00 AM - 7:00 PM</p>
+    </div>
+    <div class="contact-card">
+      <h3>Digital Contact</h3>
+      <p><strong>Jobs:</strong>jobs@company.com</a></p>
+      <p><strong>Projects:</strong>projects@company.com</a></p>
+    </div>
+  </div>
+</section>
+<!-- TESTIMONIALS -->
+<section id="testimonials" style="padding:60px 20px;background:linear-gradient(180deg,#f7faf7 0%,#ffffff 100%)">
+  <h2 style="text-align:center;font-size:28px;margin-bottom:30px;color:var(--green);font-weight:700;">
+    What Our Patients Say
+  </h2>
+
+  <div class="testimonial-slider" style="max-width:800px;margin:0 auto;position:relative;overflow:hidden;border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,0.06);background:white;">
+    <div class="testimonial-slides" id="testimonialSlides" style="display:flex;transition:transform .6s ease;">
+      <div class="t-slide" style="min-width:100%;padding:40px;text-align:center;">
+        <p style="font-style:italic;color:var(--muted);line-height:1.6;font-size:16px;">"Restore Mobility helped me walk again after my surgery. The home visits made my recovery stress-free."</p>
+        <h4 style="margin-top:20px;color:var(--green);">— Anjali, Kochi</h4>
+      </div>
+      <div class="t-slide" style="min-width:100%;padding:40px;text-align:center;">
+        <p style="font-style:italic;color:var(--muted);line-height:1.6;font-size:16px;">"The physiotherapists are professional, caring, and very knowledgeable. I felt improvement from the first week itself."</p>
+        <h4 style="margin-top:20px;color:var(--green);">— Joseph, Ernakulam</h4>
+      </div>
+      <div class="t-slide" style="min-width:100%;padding:40px;text-align:center;">
+        <p style="font-style:italic;color:var(--muted);line-height:1.6;font-size:16px;">"Great experience! Affordable packages and excellent results. Highly recommended to anyone in need of physiotherapy."</p>
+        <h4 style="margin-top:20px;color:var(--green);">— Meera, Cochin</h4>
+      </div>
+    </div>
+    <!-- Controls -->
+    <div class="testimonial-dots" id="testimonialDots" style="position:absolute;bottom:12px;left:0;right:0;display:flex;justify-content:center;gap:10px;">
+    </div>
+  </div>
+</section>
+<!-- FOOTER -->
+<footer style="background:linear-gradient(180deg,#ffffff 0%,#f6fdf7 100%);padding:40px 20px;color:#333;">
+  <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:30px;">
+    
+    <!-- About -->
+    <div>
+      <h3 style="color:var(--green);margin-bottom:15px;">Restore Mobility</h3>
+      <p style="line-height:1.6;font-size:15px;">
+        Restore Mobility Physiotherapy Clinic in Kochi provides personalized care, home visits, and effective recovery programs. 
+        Helping you regain strength and live pain-free.
+      </p>
+    </div>
+    
+    <!-- Quick Links -->
+    <div>
+      <h3 style="color:var(--green);margin-bottom:15px;">Quick Links</h3>
+      <ul style="list-style:none;padding:0;margin:0;line-height:2;font-size:15px;">
+        <li><a href="#home" style="color:inherit;text-decoration:none;">Home</a></li>
+        <li><a href="#about" style="color:inherit;text-decoration:none;">About Us</a></li>
+        <li><a href="#services" style="color:inherit;text-decoration:none;">Services</a></li>
+        <li><a href="#whyus" style="color:inherit;text-decoration:none;">Why Choose Us</a></li>
+        <li><a href="#contact" style="color:inherit;text-decoration:none;">Contact</a></li>
+      </ul>
+    </div>
+    
+    <!-- Contact -->
+    <div>
+      <h3 style="color:var(--green);margin-bottom:15px;">Contact Us</h3>
+      <p style="line-height:1.8;font-size:15px;">
+        📍 Kochi, Kerala, India<br>
+        📞 <a href="tel:+919972264755" style="color:inherit;text-decoration:none;">+91 99722 64755</a><br>
+        ✉️ <a href="mailto:info@restoremobility.in" style="color:inherit;text-decoration:none;">info@restoremobility.in</a>
+      </p>
+    </div>
+    
+    <!-- Social -->
+    <div>
+      <h3 style="color:var(--green);margin-bottom:15px;">Follow Us</h3>
+      <div style="display:flex;gap:15px;font-size:20px;">
+        <a href="#" style="color:var(--green);text-decoration:none;">🌐</a>
+        <a href="#" style="color:var(--green);text-decoration:none;">📘</a>
+        <a href="#" style="color:var(--green);text-decoration:none;">📸</a>
+        <a href="#" style="color:var(--green);text-decoration:none;">▶️</a>
+      </div>
+    </div>
+  </div>
+
+  <hr style="margin:30px 0;border:none;border-top:1px solid #e2e2e2;">
+  <p style="text-align:center;font-size:14px;color:#666;margin:0;">
+    © 2025 Restore Mobility Physiotherapy Clinic. All rights reserved.
+  </p>
+</footer>
+
+  <button class="enquire-btn enquire-trigger">Enquire Now</button>
+
+  <!-- Modal etc remains same as before -->
+<!-- Modal -->
+  <div class="modal-backdrop" id="modal">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-header">
+        <img src="https://via.placeholder.com/120x120.png?text=Logo" alt="company logo">
+        <div>
+          <div id="modalTitle" style="font-weight:800">Restore <span style="color:var(--green)">Mobility</span></div>
+          <div style="font-size:13px;color:var(--muted)">Enquiry / Appointment</div>
+        </div>
+      </div>
+      <div class="modal-body">
+        <form id="enquireForm">
+          <div class="field">
+            <label for="name">Full name</label>
+            <input id="name" name="name" required placeholder="Your name">
+          </div>
+          <div class="field">
+            <label for="mobile">Mobile number</label>
+            <input id="mobile" name="mobile" required placeholder="10-digit mobile" pattern="[0-9]{10}">
+          </div>
+          <div class="field">
+            <label for="date">Appointment date</label>
+            <input id="date" name="date" type="date" required>
+            <small style="color:var(--muted)">Sundays are unavailable.</small>
+          </div>
+          <div class="field">
+            <label for="time">Preferred time slot</label>
+            <select id="time" name="time" required>
+              <option value="">Choose date first</option>
+            </select>
+          </div>
+          <div style="color:var(--muted);font-size:13px;margin-bottom:6px">By submitting you will be redirected to WhatsApp to send your enquiry.</div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn secondary" id="closeModal">Cancel</button>
+        <button class="btn primary" id="submitEnq">Send via WhatsApp</button>
+      </div>
+    </div>
+  </div>
+
+
+  <script>
+    // ---- PRELOADER ----
+    window.addEventListener('load', ()=>{
+      const pre = document.getElementById('preloader');
+      setTimeout(()=>{pre.style.opacity=0;pre.style.transition='opacity .4s ease';setTimeout(()=>pre.remove(),450)},600);
+    });
+
+  // Hamburger toggle
+const hamburger = document.getElementById('hamburgerBtn');
+const navMenu = document.getElementById('mainNav').querySelector('ul');
+
+hamburger.addEventListener('click', () => {
+  navMenu.classList.toggle('active');
+});
+
+    // ---- SLIDER (auto only) ----
+const slides = document.getElementById('slides');
+const total = slides.children.length;
+let idx = 0;
+const interval = 5000; // 5 seconds
+
+setInterval(()=>{
+  idx = (idx + 1) % total;
+  slides.style.transform = 'translateX(' + (-idx * 100) + '%)';
+}, interval);
+
+    // ---- ENQUIRE MODAL ----
+    const modal = document.getElementById('modal');
+    const triggers = document.querySelectorAll('.enquire-trigger');
+    triggers.forEach(t=>t.addEventListener('click', ()=>{modal.style.display='flex';document.getElementById('name').focus();}))
+    document.getElementById('closeModal').addEventListener('click', ()=>{modal.style.display='none'});
+    window.addEventListener('click', (e)=>{ if(e.target===modal) modal.style.display='none' });
+
+    // ---- TIME SLOT LOGIC ----
+    const dateIn = document.getElementById('date');
+    const timeSel = document.getElementById('time');
+    function pad(n){return n<10?'0'+n:n}
+    function generateSlots(day){ // day: 0 Sun - 6 Sat
+      const opts = [];
+      if(day===0) return opts; // Sunday blocked
+      const start = (day===6)?9:9; // Sat 9am, weekdays 9am
+      const end = (day===6)?13:17; // Sat upto 1pm, weekdays upto 5pm
+      for(let h=start;h<end;h++){
+        opts.push(pad(h)+':00');
+        // also add half hour slot: opts.push(pad(h)+':30');
+      }
+      // last slot at end: if(end<=17) opts.push(pad(end)+':00');
+      return opts;
+    }
+    dateIn.addEventListener('change', ()=>{
+      const d = new Date(dateIn.value + 'T00:00');
+      if(isNaN(d)) return;
+      const day = d.getDay();
+      timeSel.innerHTML='';
+      if(day===0){ timeSel.innerHTML='<option value="">Sundays unavailable — choose another date</option>'; return }
+      const slots = generateSlots(day);
+      timeSel.innerHTML='<option value="">Select a time</option>';
+      slots.forEach(s=>{ const o=document.createElement('option'); o.value=s; o.textContent=s; timeSel.appendChild(o) });
+    });
+
+    // ---- FORM SUBMIT to WhatsApp ----
+    document.getElementById('submitEnq').addEventListener('click', (ev)=>{
+      ev.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const mobile = document.getElementById('mobile').value.trim();
+      const date = document.getElementById('date').value;
+      const time = document.getElementById('time').value;
+      if(!name || !mobile || !date || !time){ alert('Please fill all fields correctly.'); return }
+      if(!/^[0-9]{10}$/.test(mobile)){ alert('Enter a valid 10-digit mobile number.'); return }
+      // Compose message
+      const message = encodeURIComponent(`Enquiry from website:\nName: ${name}\nMobile: ${mobile}\nPreferred date: ${date}\nPreferred time: ${time}\n
+Please reply with confirmation.`);
+      // WhatsApp number (replace country code if needed). Using the number provided in earlier conversation.
+      const waNumber = '919972264755'; // set your full international number without +
+      const url = 'https://wa.me/' + waNumber + '?text=' + message;
+      // open whatsapp in new tab
+      window.open(url,'_blank');
+      // show thank you and close modal
+      alert('Thank you! You will be redirected to WhatsApp to send the enquiry.');
+      modal.style.display='none';
+      document.getElementById('enquireForm').reset();
+    });
+
+    // small accessibility: close on escape
+    window.addEventListener('keydown', (e)=>{ if(e.key==='Escape') modal.style.display='none' });
+
+    // allow easy image/map replacement: console hint
+    console.info('Replace placeholder images (picsum) and the map-placeholder div with your Google Maps iframe.');
+   // ---- TESTIMONIAL SLIDER ----
+const tSlides = document.getElementById('testimonialSlides');
+const tTotal = tSlides.children.length;
+let tIdx=0;
+const tInterval=6000;
+const tDotsNav=document.getElementById('testimonialDots');
+
+// create dots
+for(let i=0;i<tTotal;i++){
+  const b=document.createElement('button');
+  b.className='dot-btn'+(i===0?' active':'');
+  b.setAttribute('aria-label','Go to testimonial '+(i+1));
+  b.dataset.i=i;
+  b.style.width='10px';b.style.height='10px';b.style.borderRadius='50%';b.style.border='none';b.style.cursor='pointer';
+  b.style.background=i===0? 'var(--green)' : '#ddd';
+  b.addEventListener('click',()=>{goToTestimonial(i,true)});
+  tDotsNav.appendChild(b);
+}
+
+let tTimer=setInterval(()=>goToTestimonial(tIdx+1),tInterval);
+
+function goToTestimonial(i,manual){
+  tIdx=(i+tTotal)%tTotal;
+  tSlides.style.transform='translateX('+(-tIdx*100)+'%)';
+  updateTDots();
+  if(manual){clearInterval(tTimer);tTimer=setInterval(()=>goToTestimonial(tIdx+1),tInterval);}
+}
+function updateTDots(){
+  Array.from(tDotsNav.children).forEach((d,ii)=>{
+    d.style.background=ii===tIdx?'var(--green)':'#ddd';
+  });
+}
+
+  </script>
+</body>
+</html>
